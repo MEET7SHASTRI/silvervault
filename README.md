@@ -90,22 +90,8 @@ The proposed voice-based assessment component extends this functionality by conv
 
 ## How to Run
 
-### Option 1: One-Click Launcher (Recommended for Windows)
-Double-click `SilverVault_AI.exe` or run:
-```powershell
-.\run_silvervault.ps1
-```
-
-### Option 2: Command Line
-1. Activate your virtual environment:
-   ```powershell
-   ..\silvervault_v\Scripts\activate
-   ```
-2. Start the application:
-   ```powershell
-   streamlit run app.py
-   ```
-3. Open `http://localhost:8501` in Google Chrome or Microsoft Edge.
+### One-Click Launcher (Recommended for Windows)
+Double-click `SilverVault_AI.exe`
 
 ---
 
