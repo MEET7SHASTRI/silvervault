@@ -178,9 +178,8 @@ def run_llm_completion(prompt: str, system_prompt: str = "", max_tokens: int = 3
     llm = load_llama_model()
     sys_content = system_prompt or (
         "You are SilverVault AI, a precise academic assistant. "
-        "Strictly answer using ONLY the supplied source excerpts. "
-        "Never use outside knowledge. If the excerpts do not contain the answer, "
-        "explicitly state that the information was not found in the selected book."
+        "Strictly answer using ONLY the supplied source "
+       
     )
     res = llm.create_chat_completion(
         messages=[
@@ -208,10 +207,7 @@ def generate_grounded_answer(question: str, context: str, sources: List[Dict[str
         )
 
     prompt = f"""Answer the student's question using ONLY the source excerpts below.
-If the excerpts do not contain sufficient facts to answer, respond exactly:
-'This information was not found in the selected subject book.'
 
-Do not invent facts, citations, or extrapolate beyond the text. Keep the explanation structured and academic.
 
 SOURCE EXCERPTS:
 {context}
@@ -229,8 +225,7 @@ Answer grounded strictly in the source excerpts:"""
     low = answer.lower()
     if not answer or any(x in low for x in ["not found in the selected", "not provided in the context", "context does not contain", "no mention of"]):
         return (
-            "⚠️ **Information Not Found in Selected Book**\n\n"
-            "The selected subject textbook does not contain sufficient reference material to answer this question. "
+            "
             "Please consult other chapters or upload the complete syllabus notes.",
             False
         )
