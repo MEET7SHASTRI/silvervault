@@ -1,137 +1,115 @@
-# SilverVault
+# SilverVault AI: A Subject-Aware Retrieval-Augmented Generation Framework for Academic Assistance and Intelligent Voice-Based Assessment
 
-**A RAG-based academic learning assistant for BTech and MTech CS/IT students.**
+**Keywords:** Retrieval-Augmented Generation, Academic Question Answering, Semantic Search, Lightweight Language Models, Automated Assessment, Voice-Based Viva, Student Performance Analytics, Document-Grounded AI.
 
-SilverVault is a college project that aims to help CS/IT students study their semester subjects using **Retrieval-Augmented Generation (RAG)**.
+---
 
-Instead of going through large reference books for every concept, students can ask questions and receive concise, source-grounded explanations based on the selected academic material.
+## Abstract
+The increasing availability of digital academic resources has created a need for intelligent learning systems capable of providing contextually relevant explanations, personalized practice, and efficient knowledge assessment. However, conventional conversational AI systems may generate responses that extend beyond prescribed learning materials, while generic assessment tools often lack the ability to identify concept-level weaknesses.
 
-## Project Objective
+To address these limitations, **SilverVault AI** proposes a subject-aware academic assistance framework based on Retrieval-Augmented Generation (RAG), integrating document-grounded question answering, automated mock-test generation, performance analytics, and an interactive voice-based viva assessment module. The system organizes academic resources according to semester and subject, enabling contextual retrieval from administrator-provided reference documents and student-specific PDF uploads. A vector-based retrieval mechanism identifies semantically relevant passages, which are supplied to a lightweight language model to generate answers grounded in the selected academic material. The framework incorporates context-bound response generation to reduce unsupported outputs when the requested information is unavailable in the source document. Furthermore, the mock-assessment module generates subject-oriented questions and evaluates student responses to identify weaker concepts and maintain a record of learning performance.
 
-The goal of SilverVault is to create a simple AI-powered academic platform that helps students:
+The proposed voice-based assessment component extends this functionality by converting spoken responses into text, comparing the extracted content against relevant reference concepts, and delivering automated feedback through speech synthesis. To support resource-constrained deployment, the architecture emphasizes locally executable models and modular components, reducing dependence on external inference services. Student-specific document isolation and persistent academic histories are incorporated to support personalized learning and controlled access to uploaded resources. Overall, SilverVault AI demonstrates how retrieval-grounded language generation, lightweight inference, and multimodal interaction can be combined into a unified academic support environment.
 
-* Understand core concepts from their semester subjects
-* Learn from reference books and academic material
-* Ask questions using natural language
-* Take mock examinations
-* Analyze their performance
-* Identify weak concepts
-* Receive targeted revision recommendations
+---
 
-## Project Status
+## System Architecture
 
-**Currently under development.**
-
-The project is being developed as a college NLP/RAG project.
-
-## Planned Features
-
-### AI Study Assistant
-
-Students can ask questions about their academic subjects and receive answers based on the provided reference material.
-
-###  Retrieval-Augmented Generation
-
-SilverVault will retrieve relevant information from academic documents before generating an answer.
-
-###  Mock Examinations
-
-Students will be able to attempt subject-wise mock tests containing questions of different difficulty levels.
-
-###  Performance Analysis
-
-The system will analyze examination results and identify topics where the student needs improvement.
-
-###  Personalized Revision
-
-Based on weak topics, SilverVault will recommend relevant concepts and revision material.
-
-##  Planned RAG Pipeline
-
-```text
-Academic Documents
-        ↓
-   Text Extraction
-        ↓
-      Chunking
-        ↓
-     Embeddings
-        ↓
-   Vector Database
-        ↓
-      Retrieval
-        ↓
-        LLM
-        ↓
- Answer + Source
+```
+                                  +---------------------------------------+
+                                  |         Student Web Interface         |
+                                  |     (Streamlit UI + Web Speech API)   |
+                                  +-------------------+-------------------+
+                                                      |
+                  +-----------------------------------+-----------------------------------+
+                  |                                   |                                   |
+                  v                                   v                                   v
+        +-------------------+               +-------------------+               +-------------------+
+        |  Ask Your Book    |               |   MCQ Mock Exam   |               | Continuous Viva   |
+        |  (Grounded RAG)   |               | (Dynamic Question)|               | (Hands-free Voice)|
+        +---------+---------+               +---------+---------+               +---------+---------+
+                  |                                   |                                   |
+                  +-----------------+                 |                 +-----------------+
+                                    |                 |                 |
+                                    v                 v                 v
+                               +---------------------------------------------+
+                               |              Core AI Engine                 |
+                               |  - Hybrid Vector Retriever (TF-IDF + BM25)  |
+                               |  - Local Qwen 0.5B LLM (llama-cpp-python)   |
+                               |  - NLP Concept & Syntactic Pattern Analyzer |
+                               |  - Bayesian Knowledge State Mastery Tracker |
+                               +----------------------+----------------------+
+                                                      |
+                                                      v
+                               +---------------------------------------------+
+                               |        Persistent Storage Layer             |
+                               |  - SQLite (WAL Mode, Salted PBKDF2 Auth)    |
+                               |  - Chunk Index & Metadata Store             |
+                               |  - Learning-Gap Diagnostic Reports          |
+                               +---------------------------------------------+
 ```
 
-## 🛠️ Planned Technology Stack
+---
 
-| Component            | Technology            |
-| -------------------- | --------------------- |
-| Programming Language | Python                |
-| Web Application      | Streamlit             |
-| NLP / RAG            | LangChain             |
-| Embeddings           | Sentence Transformers |
-| Vector Database      | FAISS                 |
-| LLM                  | To be decided         |
-| Document Processing  | PyPDF                 |
+##  NLP, Machine Learning & Deep Learning Implementation
 
-##  Project Structure
+1. **Deep Learning (Local LLM Inference)**:
+   - Uses `Qwen 2.5 0.5B Instruct` in quantized GGUF format via `llama-cpp-python`.
+   - Local CPU/GPU inference with zero cloud dependency.
+   - Context-bound prompt engineering ensures strict grounding: answers are derived exclusively from textbook passages, preventing academic hallucinations.
 
-```text
-silvervault/
-│
-├── app/
-│   └── app.py
-│
-├── data/
-│   └── README.md
-│
-├── src/
-│   ├── rag.py
-│   ├── embeddings.py
-│   └── utils.py
-│
-├── tests/
-│   └── test_rag.py
-│
-├── docs/
-│   └── project_notes.md
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
+2. **Natural Language Processing (NLP)**:
+   - **Page-Aware Document Ingestion**: PyMuPDF (`pymupdf`) extracts page boundaries and paragraph structures.
+   - **Recursive Chunking with Overlap**: Preserves sentence boundaries, headers, and context continuity.
+   - **Concept & Terminology Extraction**: Regex and syntactic rule engines identify key definitions, structural properties, and domain entities.
+   - **Cognitive Level Classification**: Automatically categorizes assessment questions using Bloom's Taxonomy (*Recall & Definition*, *Comprehension & Analysis*, *Application & Problem-Solving*).
+
+3. **Machine Learning & Information Retrieval**:
+   - **Hybrid Semantic Search**: Combines TF-IDF vector space modeling with BM25 lexical ranking (Robertson-Spärck Jones IDF formula) for high retrieval precision.
+   - **Bayesian Knowledge Tracing (BKT)**: Dynamically updates student topic mastery states using exponential moving average updates:
+     $$\text{Mastery}_{t} = (1 - \alpha) \cdot \text{Mastery}_{t-1} + \alpha \cdot \text{Observation}_t$$
+   - **Post-Test Weakness Diagnostics**: Aggregates missed questions into topic clusters, quantifies learning gap severity, and outputs prescriptive reading roadmaps.
+
+---
+
+## 🎙️ Continuous Voice Viva Examiner
+
+- **Continuous Assessment Loop**:
+  Unlike traditional fixed-count quizzes, the viva runs continuously:
+  1. The AI Examiner selects a textbook concept and formulates an oral question.
+  2. The browser speaks the question aloud using speech synthesis.
+  3. The student speaks their answer into the microphone.
+  4. Web Speech Recognition captures live speech with real-time waveform visualization.
+  5. Upon a natural pause (~2.2s) or manual confirmation, the response is sent to the local model.
+  6. The response is evaluated against retrieved reference passages, generating a score (0-10) and examiner feedback.
+  7. The system dynamically queries the next textbook topic and asks the next question.
+  8. **The exam continues indefinitely until the student clicks "Stop Viva and View Report".**
+  9. Upon conclusion, a comprehensive diagnostic report is compiled and saved.
+
+---
+
+## How to Run
+
+### Option 1: One-Click Launcher (Recommended for Windows)
+Double-click `SilverVault_AI.exe` or run:
+```powershell
+.\run_silvervault.ps1
 ```
 
-##  Target Users
+### Option 2: Command Line
+1. Activate your virtual environment:
+   ```powershell
+   ..\silvervault_v\Scripts\activate
+   ```
+2. Start the application:
+   ```powershell
+   streamlit run app.py
+   ```
+3. Open `http://localhost:8501` in Google Chrome or Microsoft Edge.
 
-SilverVault is intended primarily for:
+---
 
-* BTech CS/IT students
-* MTech CS/IT students
-* Students studying semester-based computer science subjects
-
-## 🔬 Research Direction
-
-The project will also explore the use of RAG for academic question answering, particularly how retrieved academic material can help provide more relevant and source-grounded answers.
-
-Possible areas of investigation include:
-
-* Retrieval quality
-* Chunking strategies
-* Embedding models
-* RAG vs. non-RAG question answering
-* Answer relevance and correctness
-
-##  Project Disclaimer
-
-SilverVault is an educational college project and is not intended to replace textbooks, teachers, university resources, or professional academic guidance.
-
-##  Development
-
-This project is being developed as part of a college academic project.
-
-**Project Name:** SilverVault
-**Domain:** NLP / RAG / Generative AI / Educational Technology
+## Security & Privacy
+- **Student Data Isolation**: Documents and chat histories are scoped strictly to the student's authenticated ID.
+- **PBKDF2 Password Hashing**: Passwords stored with cryptographic salts and 240,000 iterations.
+- **Local Model Execution**: Local inference ensures academic notes and assessment transcripts never leave your machine.
